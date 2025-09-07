@@ -1,56 +1,61 @@
-import crewai
 import dotenv
 
 dotenv.load_dotenv()
 
 from crewai import Crew, Agent, Task
 from crewai.project import CrewBase, agent, task, crew
-from tools import count_letters
+from tools import search_tool, scrape_tool
 
 
 @CrewBase
-class TranslatorCrew:
+class NewsReaderAgent:
 
     @agent
-    def translator_agent(self):
+    def news_hunter_agent(self):
         return Agent(
-            config=self.agents_config["translator_agent"],
+            config=self.agents_config["news_hunter_agent"],
+            tools=[search_tool, scrape_tool],
         )
 
     @agent
-    def counter_agent(self):
+    def summarizer_agent(self):
         return Agent(
-            config=self.agents_config["counter_agent"],
-            tools=[count_letters],
+            config=self.agents_config["summarizer_agent"],
+            tools=[scrape_tool],
         )
 
+    @agent
+    def curator_agent(self):
+        return Agent(config=self.agents_config["curator_agent"])
+
+    # 작업의 결과가 자동으로 다음으로 넘어가기 때문에 순서가 중요함 (tasks.yaml)
     @task
-    def translate_task(self):
-        return Task(
-            config=self.tasks_config["translate_task"],
-        )
+    def content_harvesting_task(self):
+        return Task(config=self.tasks_config["content_harvesting_task"])
 
     @task
-    def retranslate_task(self):
-        return Task(
-            config=self.tasks_config["retranslate_task"],
-        )
+    def summarization_task(self):
+        return Task(config=self.tasks_config["summarization_task"])
 
     @task
-    def count_task(self):
-        return Task(
-            config=self.tasks_config["count_task"],
-        )
+    def final_report_assembly_task(self):
+        return Task(config=self.tasks_config["final_report_assembly_task"])
 
     @crew
-    def assemble_crew(self):
+    def crew(self):
         return Crew(
-            agents=self.agents,
             tasks=self.tasks,
+            agents=self.agents,
             verbose=True,
         )
 
 
-TranslatorCrew().assemble_crew().kickoff(
-    inputs={"sentence": "I like to riding my bike in Seoul."}
+NewsReaderAgent().crew().kickoff(
+    inputs={"topic": "National Liberation Day of Korea"},
 )
+
+# 개별 결과물에 접근
+# result = NewsReaderAgent().crew().kickoff(inputs={"topic": "National Liberation Day of Korea"})
+
+# for task_output in result.tasks_output:
+#     print(task_output)
