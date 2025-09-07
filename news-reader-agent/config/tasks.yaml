@@ -7,7 +7,14 @@ translate_task:
 
 retranslate_task:
   description: >
-    Translate {sentence} from Korean to Japanese without making mistakes.
+    Translate {sentence} from Korean to Greek without making mistakes.
   expected_output: >
-    A well formatted translation from Korean to Japanese using proper capitalization of names and places.
+    A well formatted translation from Korean to Greek using proper capitalization of names and places.
   agent: translator_agent
+
+count_task:
+  description: >
+    Count the amount of letters in a sentence.
+  expected_output: >
+    The number of letters in a sentence.
+  agent: counter_agent
