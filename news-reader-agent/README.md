@@ -2,6 +2,8 @@
 
 `CrewAI`
 
+<img width="630" height="588" alt="Image" src="https://github.com/user-attachments/assets/0285d855-1ac0-448f-897a-c12e98e74601" />
+
 <br>
 
 ### 목표
