@@ -5,7 +5,7 @@
 - **CREWAI**
   - [x] 뉴스 리더 에이전트
   - [x] 잡 헌터 에이전트
-  - [ ] 콘텐츠 파이프라인 에이전트
+  - [x] 콘텐츠 파이프라인 에이전트
 - **AUTOGEN**
   - [ ] Grok 답 리서치 클론
 - **OpenAI SDK**
@@ -46,3 +46,14 @@ check files: `.python-version`, `pyproject.toml`
 $ cd first-agent
 $ uv sync
 ```
+
+<br>
+
+##
+
+Nomad Coders, [AI Agents 마스터클래스](https://nomadcoders.co/ai-agents-masterclass "AI Agents 마스터클래스")
+
+<br>
+
+**Docs**  
+[CrewAI Agents](https://docs.crewai.com/ko/concepts/agents)
