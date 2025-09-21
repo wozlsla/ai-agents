@@ -58,4 +58,8 @@ def web_search_tool(query: str) -> str:
     return cleaned_chunks
 
 
-# print(web_search_tool("ai engineer jobs in south korea"))
+def save_report_to_md(content: str) -> str:
+    """Save report content to report.md file."""
+    with open("report.md", "w") as f:
+        f.write(content)
+    return "report.md"

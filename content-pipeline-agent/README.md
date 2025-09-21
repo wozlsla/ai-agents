@@ -1,4 +1,4 @@
-## Job Hunter Agent
+## Content Pipeline Agent
 
 `CrewAI`
 
