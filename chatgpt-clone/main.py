@@ -4,6 +4,7 @@ dotenv.load_dotenv()
 
 from openai import OpenAI
 import asyncio
+import base64
 import streamlit as st
 from agents import Agent, Runner, SQLiteSession, WebSearchTool, FileSearchTool
 
@@ -53,9 +54,16 @@ async def paint_history():
         if "role" in message:
             with st.chat_message(message["role"]):
                 if message["role"] == "user":
-                    st.write(message["content"])
+                    content = message["content"]  # refer to memory sample
+                    if isinstance(content, str):
+                        st.write(content)
+                    elif isinstance(content, list):
+                        for part in content:
+                            if "image_url" in part:
+                                st.image(part["image_url"])
+
                 elif message["type"] == "message":
-                    st.write(message["content"][0]["text"].response.replace("$", "\$"))
+                    st.write(message["content"][0]["text"].replace("$", "\$"))
 
         if "type" in message:
             if message["type"] == "web_search_call":
@@ -127,7 +135,7 @@ async def run_agent(message):
 prompt = st.chat_input(
     "Write a message for your assistant",
     accept_file=True,
-    file_type=["txt"],
+    file_type=["txt", "jpg", "jpeg", "png"],
 )
 
 if prompt:
@@ -151,6 +159,31 @@ if prompt:
                         file_id=uploaded_file.id,
                     )
                     status.update(label="✅ File uploaded", state="complete")
+
+        if file.type.startswith("image/"):
+            with st.status("⏳ Uploading images...") as status:
+                file_bytes = file.getvalue()  # get bytes
+                base64_data = base64.b64encode(file_bytes).decode("utf-8")
+                data_uri = f"data:{file.type};base64,{base64_data}"  # for chatgpt
+                asyncio.run(
+                    session.add_items(
+                        [
+                            {
+                                "role": "user",
+                                "content": [
+                                    {
+                                        "type": "input_image",
+                                        "detail": "auto",
+                                        "image_url": data_uri,
+                                    }
+                                ],
+                            }
+                        ]
+                    )
+                )
+                status.update(label="✅ Image uploaded", state="complete")
+            with st.chat_message("human"):
+                st.image(data_uri)
 
     if prompt.text:
         with st.chat_message("human"):

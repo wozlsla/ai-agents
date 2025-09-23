@@ -1,0 +1,30 @@
+[
+  {
+    "role": "user",
+    "content": [
+      {
+        "type": "input_image",
+        "detail": "auto",
+        "image_url": "data:image/png;base64,iVBORw0...CZAACQSDwP8Aj0Sr+OToj0sAAAAASUVORK5CYII="
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "content": "What does the image say?"
+  },
+  {
+    "id": "msg_68d2b7b4b3a0819582e380d81448468903d261152db94c53",
+    "content": [
+      {
+        "annotations": [],
+        "text": "The image lists shares of international stocks. It says:\n\nInternational\n-------------\n- Toyota (TM): 40 shares @ $134.75.\n- Nestlé (NSRGY): 120 shares @ $113.20.",
+        "type": "output_text",
+        "logprobs": []
+      }
+    ],
+    "role": "assistant",
+    "status": "completed",
+    "type": "message"
+  }
+]
