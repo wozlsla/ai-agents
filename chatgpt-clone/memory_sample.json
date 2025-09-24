@@ -28,3 +28,44 @@
     "type": "message"
   }
 ]
+
+// code interpreter tool
+[
+  {
+    "content": "Run some code to calculate what happens if everything in my portfolio goes up by 10%",
+    "role": "user"
+  },
+  {
+    "id": "fs_68d3da8983908190971cf3c7bbbe033b09c988529c8f1a38",
+    "queries": [
+      "portfolio holdings",
+      "current value of portfolio",
+      "list of assets and their values"
+    ],
+    "status": "completed",
+    "type": "file_search_call",
+    "results": null
+  },
+  {
+    "id": "ci_68d3da8b11408190908876587db0fae609c988529c8f1a38",
+    "code": "# Let's calculate the new portfolio values if everything goes up by 10%\n# Values (from the diary entry):\nholdings = {\n    \"AAPL\": {\"shares\": 350, \"price\": 128.40},\n    \"MSFT\": {\"shares\": 275, \"price\": 242.10},\n    \"TM\": {\"shares\": 40, \"price\": 134.75},\n    \"NSRGY\": {\"shares\": 120, \"price\": 113.20},\n    \"ROKU\": {\"shares\": 500, \"price\": 59.80},\n    \"SQ\": {\"shares\": 300, \"price\": 62.50},\n    \"VTI\": {\"shares\": 600, \"price\": 212.90},\n    \"EEM\": {\"shares\": 450, \"price\": 38.40},\n    \"PLD\": {\"shares\": 280, \"price\": 116.00},\n    \"Gold\": {\"oz\": 5, \"price\": 1745},\n    \"BTC\": {\"amount\": 2.3, \"price\": 29300},\n    \"Treasuries\": {\"value\": 45000},\n    \"IG_Corp\": {\"value\": 18000},\n    \"MMF\": {\"value\": 23700}\n}\n\n# Calculate original total (except alternate asset details like cash bonds, just sum given values directly)\norig_total = 0\n\n# Equities & Alternatives\norig_total += holdings[\"AAPL\"][\"shares\"] * holdings[\"AAPL\"][\"price\"]\norig_total += holdings[\"MSFT\"][\"shares\"] * holdings[\"MSFT\"][\"price\"]\norig_total += holdings[\"TM\"][\"shares\"] * holdings[\"TM\"][\"price\"]\norig_total += holdings[\"NSRGY\"][\"shares\"] * holdings[\"NSRGY\"][\"price\"]\norig_total += holdings[\"ROKU\"][\"shares\"] * holdings[\"ROKU\"][\"price\"]\norig_total += holdings[\"SQ\"][\"shares\"] * holdings[\"SQ\"][\"price\"]\norig_total += holdings[\"VTI\"][\"shares\"] * holdings[\"VTI\"][\"price\"]\norig_total += holdings[\"EEM\"][\"shares\"] * holdings[\"EEM\"][\"price\"]\norig_total += holdings[\"PLD\"][\"shares\"] * holdings[\"PLD\"][\"price\"]\norig_total += holdings[\"Gold\"][\"oz\"] * holdings[\"Gold\"][\"price\"]\norig_total += holdings[\"BTC\"][\"amount\"] * holdings[\"BTC\"][\"price\"]\n\n# Bonds & cash\norig_total += holdings[\"Treasuries\"][\"value\"]\norig_total += holdings[\"IG_Corp\"][\"value\"]\norig_total += holdings[\"MMF\"][\"value\"]\n\n# New total after 10% increase\nnew_total = 0\n# Equities & Alternatives up 10%\nnew_total += 1.1 * (holdings[\"AAPL\"][\"shares\"] * holdings[\"AAPL\"][\"price\"])\nnew_total += 1.1 * (holdings[\"MSFT\"][\"shares\"] * holdings[\"MSFT\"][\"price\"])\nnew_total += 1.1 * (holdings[\"TM\"][\"shares\"] * holdings[\"TM\"][\"price\"])\nnew_total += 1.1 * (holdings[\"NSRGY\"][\"shares\"] * holdings[\"NSRGY\"][\"price\"])\nnew_total += 1.1 * (holdings[\"ROKU\"][\"shares\"] * holdings[\"ROKU\"][\"price\"])\nnew_total += 1.1 * (holdings[\"SQ\"][\"shares\"] * holdings[\"SQ\"][\"price\"])\nnew_total += 1.1 * (holdings[\"VTI\"][\"shares\"] * holdings[\"VTI\"][\"price\"])\nnew_total += 1.1 * (holdings[\"EEM\"][\"shares\"] * holdings[\"EEM\"][\"price\"])\nnew_total += 1.1 * (holdings[\"PLD\"][\"shares\"] * holdings[\"PLD\"][\"price\"])\nnew_total += 1.1 * (holdings[\"Gold\"][\"oz\"] * holdings[\"Gold\"][\"price\"])\nnew_total += 1.1 * (holdings[\"BTC\"][\"amount\"] * holdings[\"BTC\"][\"price\"])\n# Cash/bonds (assuming values don't fluctuate 10% for these)\nnew_total += holdings[\"Treasuries\"][\"value\"]\nnew_total += holdings[\"IG_Corp\"][\"value\"]\nnew_total += holdings[\"MMF\"][\"value\"]\n\n# Calculate gain\ngain = new_total - orig_total\n\norig_total, new_total, gain",
+    "container_id": "cntr_68d3da8844188190a125e760816dddd404b36439b6d81d3a",
+    "outputs": null,
+    "status": "completed",
+    "type": "code_interpreter_call"
+  },
+  {
+    "id": "msg_68d3da948a048190b340a62d260f63a109c988529c8f1a38",
+    "content": [
+      {
+        "annotations": [],
+        "text": "If everything in your portfolio goes up by 10% (stocks, international equities, growth/small cap, alternatives, gold, and Bitcoin), while your bonds and cash holdings remain unchanged, here's what happens:\n\n- Original portfolio value (of the up-10% portion plus cash/bonds): $519,456.50\n- New portfolio value after a 10% increase in all relevant assets: $562,732.15\n- Total gain: $43,275.65\n\nThis gain only reflects the equity, alternatives, gold, and BTC portions, as bond and cash values are usually not affected by such a move unless specified otherwise.",
+        "type": "output_text",
+        "logprobs": null
+      }
+    ],
+    "role": "assistant",
+    "status": "completed",
+    "type": "message"
+  },
+]

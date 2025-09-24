@@ -13,6 +13,7 @@ from agents import (
     WebSearchTool,
     FileSearchTool,
     ImageGenerationTool,
+    CodeInterpreterTool,
 )
 
 client = OpenAI()
@@ -30,6 +31,7 @@ if "agent" not in st.session_state:
         You have access to the followig tools:
             - Web Search Tool: Use this when the user asks a questions that isn't in your training data. Use this tool when the users asks about current or future events, when you think you don't know the answer, try searching for it in the web first.
             - File Search Tool: Use this tool when the user asks a question about facts related to themselves. Or when they ask questions about specific files.
+            - Code Interpreter Tool: Use this tool when you need to write and run code to answer the user's question.
         """,
         tools=[
             WebSearchTool(),
@@ -37,13 +39,19 @@ if "agent" not in st.session_state:
                 vector_store_ids=[VECTOR_STORE_ID],
                 max_num_results=3,
             ),
-            ImageGenerationTool(  # PermissionDeniedError `gpt-image-1`(verification)
+            # ImageGenerationTool(  # PermissionDeniedError `gpt-image-1`(verification)
+            #     tool_config={
+            #         "type": "image_generation",
+            #         "quality": "low",
+            #         "output_format": "jpeg",
+            #         "moderation": "low",
+            #         "partial_images": 1,  # loading image
+            #     }
+            # ),
+            CodeInterpreterTool(
                 tool_config={
-                    "type": "image_generation",
-                    "quality": "low",
-                    "output_format": "jpeg",
-                    "moderation": "low",
-                    "partial_images": 1,  # loading image
+                    "type": "code_interpreter",
+                    "container": {"type": "auto"},
                 }
             ),
         ],
@@ -93,6 +101,9 @@ async def paint_history():
                 image = base64.b64decode(message["result"])
                 with st.chat_message("ai"):
                     st.image(image)
+            elif message_type == "code_interpreter_call":
+                with st.chat_message("ai"):
+                    st.code(message["code"])
 
 
 # Draw UI
@@ -101,7 +112,6 @@ asyncio.run(paint_history())
 
 def update_status(status_container, event):
 
-    # just for web search tool
     status_messages = {
         "response.web_search_call.completed": ("✅ Web search completed.", "complete"),
         "response.web_search_call.in_progress": (
@@ -132,6 +142,16 @@ def update_status(status_container, event):
             "🎨 Drawing image...",
             "running",
         ),
+        "response.code_interpreter_call_code.done": ("🤖 Ran code.", "complete"),
+        "response.code_interpreter_call.completed": ("🤖 Ran code.", "complete"),
+        "response.code_interpreter_call.in_progress": (
+            "🤖 Running code...",
+            "complete",
+        ),
+        "response.code_interpreter_call.interpreting": (
+            "🤖 Running code...",
+            "complete",
+        ),
         "response.completed": (" ", "complete"),
     }
 
@@ -144,9 +164,15 @@ def update_status(status_container, event):
 async def run_agent(message):
     with st.chat_message("ai"):
         status_container = st.status("⏳", expanded=False)
-        text_placeholder = st.empty()
+        code_placeholder = st.empty()
         image_placeholder = st.empty()
+        text_placeholder = st.empty()
         response = ""
+        code_response = ""
+
+        st.session_state["code_placeholder"] = code_placeholder
+        st.session_state["image_placeholder"] = image_placeholder
+        st.session_state["text_placeholder"] = text_placeholder
 
         stream = Runner.run_streamed(agent, message, session=session)
 
@@ -159,13 +185,13 @@ async def run_agent(message):
                     response += event.data.delta
                     text_placeholder.write(response.replace("$", "\\$"))
 
+                elif event.data.type == "response.code_interpreter_call_code.delta":
+                    code_response += event.data.delta
+                    code_placeholder.code(code_response)
+
                 elif event.data.type == "response.image_generation_call.partial_image":
                     image = base64.b64decode(event.data.partial_image_b64)
                     image_placeholder.image(image)
-
-                elif event.data.type == "response.completed":
-                    image_placeholder.empty()
-                    text_placeholder.empty()
 
 
 ### UI ###
@@ -177,6 +203,14 @@ prompt = st.chat_input(
 )
 
 if prompt:
+
+    if "code_placeholder" in st.session_state:
+        st.session_state["code_placeholder"].empty()
+    if "image_placeholder" in st.session_state:
+        st.session_state["image_placeholder"].empty()
+    if "text_placeholder" in st.session_state:
+        st.session_state["text_placeholder"].empty()
+
     for file in prompt.files:
         if file.type.startswith("text/"):
             with st.chat_message("ai"):
