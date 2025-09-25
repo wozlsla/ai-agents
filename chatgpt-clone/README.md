@@ -16,8 +16,37 @@ OpenAI의 Agents SDK와 Streamlit을 사용하여 한층 더 강화된 버전의
 
 ```
 ./chatgpt-clone
+├── chat-gpt-clone-memory.db
+├── facts.txt (sample)
+├── international.png (sample)
+├── main.py
+└── pyproject.toml
+
+
+# (learn openai-agents-sdk)
+./chatgpt-clone
+├── ai-memory.db
+├── ai-memory.db-shm
+├── ai-memory.db-wal
+└── dummy-agent.ipynb
+
+
+# Run Streamlit
+$ uv run streamlit run main.py
 ```
 
 <br>
 
-Tracing: [Logs](https://platform.openai.com/logs)
+### 참고
+
+- Tracing: [Logs](https://platform.openai.com/logs)
+
+- OpenAI Agents SDK: [Tools](https://openai.github.io/openai-agents-python/tools)
+  - Hosted tools
+    - WebSearchTool
+    - FileSearchTool, [vector store](https://platform.openai.com/storage/vector_stores)
+    - ImageGenerationTool, [create image](https://platform.openai.com/docs/api-reference/images/create)
+    - HostedMCPTool, [context7](https://context7.com)
+  - Local MCP Server
+    - [MCP Yahoo Finance](https://github.com/leoncuhk/mcp-yahoo-finance)
+    - [Time MCP Server](https://github.com/modelcontextprotocol/servers/tree/main/src/time)

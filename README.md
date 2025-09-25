@@ -10,7 +10,7 @@
   - [x] (이메일 최적화 에이전트)
   - [x] Grok 딥 리서치 클론
 - **OpenAI SDK**
-  - [ ] ChatGPT 클론
+  - [x] ChatGPT 클론
   - [ ] 고객 지원 에이전트
 - **Google ADK**
   - [ ] 투자 전략 에이전트
@@ -57,4 +57,9 @@ Nomad Coders, [AI Agents 마스터클래스](https://nomadcoders.co/ai-agents-ma
 <br>
 
 **Docs**  
-[CrewAI Agents](https://docs.crewai.com/ko/concepts/agents)
+[CrewAI Agents](https://docs.crewai.com/ko/concepts/agents)  
+[Streamlit](https://docs.streamlit.io)  
+[OpenAI Agents SDK](https://openai.github.io/openai-agents-python)
+
+[Serper](https://serper.dev)  
+[Firecrawl](https://docs.firecrawl.dev/introduction)
