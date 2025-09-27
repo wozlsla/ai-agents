@@ -1,0 +1,10 @@
+// handoff (models.py >> HandoffData)
+{
+"content":"Transfer me to the tech support, my pc wont start."
+"role":"user"
+}
+
+Handing off to Technical Support Specialist 
+Reason: Jimin's PC will not start. Needs technical troubleshooting. 
+Issue Type: Technical Support 
+Issue Description: Jimin's PC won't start. Needs troubleshooting assistance to power on the device.
