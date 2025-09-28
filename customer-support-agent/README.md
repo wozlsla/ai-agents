@@ -25,5 +25,28 @@
 ### 구조
 
 ```
+./customer-support-agent
+├── customer-support-memory.db
+├── main.py
+├── models.py
+├── my_agents
+│   ├── account_agent.py
+│   ├── billing_agent.py
+│   ├── order_agent.py
+│   ├── technical_agent.py
+│   └── triage_agent.py
+├── output_guardrails.py
+├── pyproject.toml
+├── tools.py
+└── workflow.py
 
 ```
+
+<br>
+
+### 참고
+
+[Context management](https://openai.github.io/openai-agents-python/context)  
+[Handoff filters](https://openai.github.io/openai-agents-python/ref/extensions/handoff_filters)  
+[Hooks, Lifecycle](https://openai.github.io/openai-agents-python/ref/lifecycle/#agents.lifecycle.AgentHooks)  
+[Voice](https://openai.github.io/openai-agents-python/ref/voice/pipeline)

@@ -52,6 +52,8 @@ def dynamic_triage_agent_instructions(
     agent: Agent[UserAccountContext],
 ):
     return f"""
+    SPEAK TO THE USER IN THE LANGUAGE THEY ARE USING.
+
     {RECOMMENDED_PROMPT_PREFIX}
 
 

@@ -11,7 +11,7 @@
   - [x] Grok 딥 리서치 클론
 - **OpenAI SDK**
   - [x] ChatGPT 클론
-  - [ ] 고객 지원 에이전트
+  - [x] 고객 지원 에이전트
 - **Google ADK**
   - [ ] 투자 전략 에이전트
   - [ ] 유튜브 쇼츠 메이커 에이전트
@@ -56,7 +56,22 @@ Nomad Coders, [AI Agents 마스터클래스](https://nomadcoders.co/ai-agents-ma
 
 <br>
 
-**Docs**  
+**Learn**
+
+- Autogen
+
+  - group chat
+
+- OpenAI SDK
+
+  - agents, runner, stream event, memory, schema
+  - tools, vector store, multi-modal(image), MCP
+  - context management, dynamic instructions, guardrails, handoffs, hooks, voice agent
+
+<br>
+
+**Docs**
+
 [CrewAI Agents](https://docs.crewai.com/ko/concepts/agents)  
 [Streamlit](https://docs.streamlit.io)  
 [OpenAI Agents SDK](https://openai.github.io/openai-agents-python)
