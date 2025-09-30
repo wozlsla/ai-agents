@@ -49,6 +49,9 @@ $ uv run adk web
 # or
 $ source .venv/bin/activate
 $ adk web
+
+# api (http://127.0.0.1:8000/docs)
+$ adk api_server
 ```
 
 firecrawl
@@ -57,4 +60,4 @@ firecrawl
 
 ### 참고
 
-[Google ADK](https://google.github.io/adk-docs)
+[Google ADK](https://github.com/google/adk-python?tab=readme-ov-file)
