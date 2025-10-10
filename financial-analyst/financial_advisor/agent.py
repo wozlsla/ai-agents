@@ -1,37 +1,29 @@
 from google.adk.agents import Agent
+from google.adk.tools.agent_tool import AgentTool
 from google.adk.models.lite_llm import LiteLlm
+from .sub_agents.data_analyst import data_analyst
+from .sub_agents.financial_analyst import financial_analyst
+from .sub_agents.news_analyst import news_analyst
+from .prompt import PROMPT
 
 MODEL = LiteLlm("openai/gpt-5-nano")
 
 
-def get_weather(city: str):
-    return f"The weather in {city} is 30 degrees."
+def save_advice_report():
+    pass
 
 
-def convert_units(degrees: int):
-    return f"That is 40 farenheit"
-
-
-geo_agent = Agent(
-    name="GeoAgent",
-    instruction="You help with geo questions",
-    model=MODEL,
-    description="Transfer to this agent when you have a geo related question.",
-)
-
-
-agent = Agent(
-    name="WeatherAgent",
-    instruction="",
+financial_advisor = Agent(
+    name="FinancialAdvisor",
+    instruction=PROMPT,
     model=MODEL,
     tools=[
-        get_weather,
-        convert_units,
-    ],
-    sub_agents=[
-        geo_agent,
+        AgentTool(agent=financial_analyst),
+        AgentTool(agent=news_analyst),
+        AgentTool(agent=data_analyst),
+        save_advice_report,
     ],
 )
 
 # required(root_agent)
-root_agent = agent
+root_agent = financial_advisor
