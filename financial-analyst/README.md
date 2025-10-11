@@ -54,10 +54,13 @@ $ adk web
 $ adk api_server
 ```
 
-firecrawl
-
 <br>
 
 ### 참고
 
 [Google ADK](https://github.com/google/adk-python?tab=readme-ov-file)
+
+- [Artifacts](https://google.github.io/adk-docs/artifacts)
+
+[Google Gen AI SDK](https://googleapis.github.io/python-genai)  
+[Yahoo Finance's API](https://github.com/ranaroussi/yfinance)

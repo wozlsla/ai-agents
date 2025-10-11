@@ -13,7 +13,7 @@
   - [x] ChatGPT 클론
   - [x] 고객 지원 에이전트
 - **Google ADK**
-  - [ ] 투자 전략 에이전트
+  - [x] 투자 전략 에이전트
   - [ ] 유튜브 쇼츠 메이커 에이전트
 - **LangGraph**
   - [ ] 유튜브 썸네일 크리에이터 에이전트
@@ -50,15 +50,11 @@ $ uv sync
 
 <br>
 
-##
+## Notes
 
-Nomad Coders, [AI Agents 마스터클래스](https://nomadcoders.co/ai-agents-masterclass "AI Agents 마스터클래스")
+### Learned
 
-<br>
-
-**Learn**
-
-- Autogen
+- AUTOGEN
 
   - group chat
 
@@ -68,13 +64,25 @@ Nomad Coders, [AI Agents 마스터클래스](https://nomadcoders.co/ai-agents-ma
   - tools, vector store, multi-modal(image), MCP
   - context management, dynamic instructions, guardrails, handoffs, hooks, voice agent
 
+- Google ADK
+
+  - agent, subagents, state, artifacts
+
 <br>
 
-**Docs**
+### Docs
 
 [CrewAI Agents](https://docs.crewai.com/ko/concepts/agents)  
-[Streamlit](https://docs.streamlit.io)  
-[OpenAI Agents SDK](https://openai.github.io/openai-agents-python)
+[OpenAI Agents SDK](https://openai.github.io/openai-agents-python)  
+[Google ADK](https://github.com/google/adk-python?tab=readme-ov-file)
 
+[Streamlit](https://docs.streamlit.io)  
 [Serper](https://serper.dev)  
-[Firecrawl](https://docs.firecrawl.dev/introduction)
+[Firecrawl](https://docs.firecrawl.dev/introduction)  
+[Yahoo Finance's API](https://github.com/ranaroussi/yfinance)
+
+<br>
+
+---
+
+Nomad Coders, [AI Agents 마스터클래스](https://nomadcoders.co/ai-agents-masterclass "AI Agents 마스터클래스")

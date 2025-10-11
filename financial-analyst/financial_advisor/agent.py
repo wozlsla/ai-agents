@@ -1,3 +1,4 @@
+from google.genai import types
 from google.adk.agents import Agent
 from google.adk.tools import ToolContext
 from google.adk.tools.agent_tool import AgentTool
@@ -10,7 +11,7 @@ from .prompt import PROMPT
 MODEL = LiteLlm("openai/gpt-5-nano")
 
 
-def save_advice_report(tool_context: ToolContext, summary: str):
+async def save_advice_report(tool_context: ToolContext, summary: str, ticker: str):
     # save_advice_report 는 일반 tool과 같음. 원한다면 ToolContext 받게해 사용 가능.
     # ToolContext: 현재 에이전트의 실행 환경에 대한 정보를 담고 있으며, state는 현재 에이전트 세션의 저장소 역할
 
@@ -37,6 +38,17 @@ def save_advice_report(tool_context: ToolContext, summary: str):
 
     # state에 저장
     state["report"] = report
+
+    filename = f"{ticker}_invstment_advice.md"
+
+    artifact = types.Part(
+        inline_data=types.Blob(
+            mime_type="text/markdown",
+            data=report.encode("utf-8"),
+        )
+    )
+
+    await tool_context.save_artifact(filename, artifact)
 
     return {
         "success": True,
