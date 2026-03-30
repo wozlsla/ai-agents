@@ -17,7 +17,9 @@
   - [ ] 유튜브 쇼츠 메이커 에이전트
 - **LangGraph**
   - [x] 유튜브 썸네일 크리에이터 에이전트
-  - [ ] AI 튜터 에이전트
+  - [ ] AI 튜터 에이전트  
+
+📌 [Workflow Architectures](https://github.com/wozlsla/ai-agents/tree/main/workflow-architectures)
 
 <br>
 
