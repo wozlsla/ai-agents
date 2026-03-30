@@ -16,7 +16,7 @@
   - [x] 투자 전략 에이전트
   - [ ] 유튜브 쇼츠 메이커 에이전트
 - **LangGraph**
-  - [ ] 유튜브 썸네일 크리에이터 에이전트
+  - [x] 유튜브 썸네일 크리에이터 에이전트
   - [ ] AI 튜터 에이전트
 
 <br>
@@ -67,6 +67,14 @@ $ uv sync
 - Google ADK
 
   - agent, subagents, state, artifacts
+  - workflow agents
+
+- LangGraph
+
+  - graph, state, nodes, edges
+  - multiple schemas, reducer functions, node caching
+  - conditional edge, send api, command(handoff)
+  - tools, memory, human feedback, tracing(langsmith)
 
 <br>
 
