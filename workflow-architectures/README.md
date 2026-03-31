@@ -82,4 +82,43 @@ Engineering at Anthropic, **[Building effective agents](https://www.anthropic.co
 </br>
 
 ### Orchestrator-workers
+중앙 LLM(오케스트레이터)이 작업을 동적으로 분해하고, 하위 LLM(워커)에게 위임한 뒤, 결과를 취합하는 방식.
+
+- **When to use this workflow**
+    - 어떤 하위 작업이 필요한지 **사전에 예측할 수 없는** 복잡한 작업에 적합
+    - 하위 작업의 수와 내용이 입력에 따라 매번 달라지는 경우
+    - Parallelization과 구조는 비슷하지만, 핵심 차이는 **유연성**
+        - Parallelization → 하위 작업이 **사전에 고정**되어 있음
+        - Orchestrator-Workers → 하위 작업이 **오케스트레이터가 입력을 보고 그때그때 결정**
+
+- **Examples where orchestrator-workers is useful**
+    - 복잡한 코딩 작업 → 수정해야 할 파일의 수와 변경 내용이 매 작업마다 다름
+    - 멀티소스 검색 및 분석 → 여러 출처에서 정보를 수집하고, 관련성을 판단하며 종합
+
+</br>
+
+> [!NOTE]  
+> "무엇을 해야 할지"를 LLM이 스스로 판단하게 만드는 첫 번째 패턴.  
+> 하위 작업이 예측 가능하면 Parallelization, 예측 불가능하면 Orchestrator-Workers를 선택.
+
+</br>
+
 ### Evaluator-optimizer
+하나의 LLM이 응답을 생성하고, 다른 LLM이 평가 및 피드백을 제공하는 과정을 루프로 반복하는 방식.
+
+- **When to use this workflow**
+    - 명확한 평가 기준이 있고, 반복적인 개선이 실질적인 가치를 만들어낼 때
+    - 좋은 적합성의 두 가지 신호:
+        1. 사람이 피드백을 명확히 표현했을 때 LLM 결과물이 눈에 띄게 개선되는 경우
+        2. LLM 자체가 그런 피드백을 스스로 제공할 수 있는 경우
+    - 숙련된 작가가 초고 → 퇴고 → 재작성을 반복하며 완성도를 높이는 과정과 유사
+
+- **Examples where evaluator-optimizer is useful**
+    - 문학 번역 → 번역 LLM이 초벌 번역을 생성, 평가 LLM이 뉘앙스·어조 등을 비판적으로 검토하고 개선 방향을 제시
+    - 복합 검색 작업 → 여러 라운드의 검색과 분석이 필요한 경우, 평가 LLM이 추가 검색이 필요한지 여부를 판단하며 루프를 제어
+
+</br>
+
+> [!NOTE]  
+> 단순히 "한 번 잘 만드는 것"이 목표가 아니라, "반복을 통해 더 나아지는 것"이 목표일 때 선택할 것.  
+> 평가 기준이 모호하거나, 반복해도 개선이 없다면 이 패턴은 오버엔지니어링이 될 수 있음.
