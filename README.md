@@ -54,9 +54,23 @@ $ uv sync
 
 <br>
 
-## Notes
+**Tracing**
 
-### Learned
+langsmith
+``` 
+$ langgraph dev
+```
+
+<br>
+
+**Testing**
+```
+$ uv run pytest tests.py -vv
+```
+
+<br>
+
+## Notes
 
 - AUTOGEN
 

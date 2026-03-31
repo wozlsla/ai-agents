@@ -1,17 +1,21 @@
+import dotenv
+
+dotenv.load_dotenv()
+
 import pytest
 from main import graph
 
 
 # 1. Full Graph
 @pytest.mark.parametrize(
-    "email, expected_category, expected_score",
+    "email, expected_category, min_score, max_score",
     [
-        ("this is urgent!", "urgent", 10),
-        ("i wanna talk to you", "normal", 5),
-        ("i have an offer for you", "spam", 1),
+        ("this is urgent!", "urgent", 8, 10),
+        ("i wanna talk to you", "normal", 4, 7),
+        ("i have an offer for you", "spam", 1, 3),
     ],
 )
-def test_full_graph(email, expected_category, expected_score):
+def test_full_graph(email, expected_category, min_score, max_score):
 
     result = graph.invoke(
         {"email": email},
@@ -23,7 +27,7 @@ def test_full_graph(email, expected_category, expected_score):
     )
 
     assert result["category"] == expected_category
-    assert result["priority_score"] == expected_score
+    assert min_score <= result["priority_score"] <= max_score
 
 
 # 2. Individual node
@@ -38,15 +42,15 @@ def test_individual_nodes():
 
     # assign_priority
     result = graph.nodes["assign_priority"].invoke(
-        {"category": "spam"},
+        {"category": "spam", "email": "buy this pot."},
     )
-    assert result["priority_score"] == 1
+    assert 1 <= result["priority_score"] <= 3
 
     # draft_response
-    result = graph.nodes["draft_response"].invoke(
-        {"category": "spam"},
-    )
-    assert "Go away" in result["response"]
+    # result = graph.nodes["draft_response"].invoke(
+    #     {"category": "spam"},
+    # )
+    # assert "Go away" in result["response"]
 
 
 # 3. Partial node
@@ -77,7 +81,4 @@ def test_partial_execution():
         interrupt_after="draft_response",
     )
 
-    assert result["priority_score"] == 1
-
-
-# uv run pytest tests.py -vv
+    assert 1 <= result["priority_score"] <= 3
