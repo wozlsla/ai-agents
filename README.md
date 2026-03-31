@@ -1,4 +1,4 @@
-# AI-agents
+# AI Agents
 
 - **Basic**
   - [x] First Agent
@@ -9,7 +9,7 @@
 - **AUTOGEN**
   - [x] (이메일 최적화 에이전트)
   - [x] Grok 딥 리서치 클론
-- **OpenAI SDK**
+- **OpenAI Agents SDK**
   - [x] ChatGPT 클론
   - [x] 고객 지원 에이전트
 - **Google ADK**
@@ -18,8 +18,10 @@
 - **LangGraph**
   - [x] 유튜브 썸네일 크리에이터 에이전트
   - [ ] AI 튜터 에이전트  
+</br>  
 
-📌 [Workflow Architectures](https://github.com/wozlsla/ai-agents/tree/main/workflow-architectures)
+>[!IMPORTANT]  
+> [Workflow Architectures](https://github.com/wozlsla/ai-agents/tree/main/workflow-architectures)
 
 <br>
 
@@ -60,7 +62,7 @@ $ uv sync
 
   - group chat
 
-- OpenAI SDK
+- OpenAI Agents SDK
 
   - agents, runner, stream event, memory, schema
   - tools, vector store, multi-modal(image), MCP
@@ -76,7 +78,10 @@ $ uv sync
   - graph, state, nodes, edges
   - multiple schemas, reducer functions, node caching
   - conditional edge, send api, command(handoff)
-  - tools, memory, human feedback, tracing(langsmith)
+  - tools, memory, human feedback, tracing(langsmith)  
+  </br>
+  
+  - testing agents
 
 <br>
 
