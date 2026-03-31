@@ -1,4 +1,4 @@
-from typing import Literal, List
+from typing import Literal
 from pydantic import BaseModel, Field
 from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
@@ -77,11 +77,11 @@ def assign_priority(state: EmailState):
 
 def draft_response(state: EmailState) -> EmailState:
     result = llm.invoke(
-        f"""이 {state['category']} 이메일에 대해 짧고 전문적인 응답 초안을 작성하세요.
+        f"""이 {state["category"]} 이메일에 대해 짧고 전문적인 응답 초안을 작성하세요.
 
-        Original email: {state['email']}
-        Category: {state['category']}
-        Priority: {state['priority_score']}/10
+        Original email: {state["email"]}
+        Category: {state["category"]}
+        Priority: {state["priority_score"]}/10
 
         Guidelines:
         - Urgent: 긴급함을 인지했음을 알리고, 즉각적인 처리를 약속할 것
