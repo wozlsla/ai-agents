@@ -54,5 +54,32 @@ Engineering at Anthropic, **[Building effective agents](https://www.anthropic.co
 </br>
 
 ### Parallelization
+여러 LLM이 동시에 작업을 수행하고, 그 결과를 프로그래밍적으로 취합하는 방식.
+
+- 두 가지 핵심 변형이 있음
+    - **Sectioning**: 하나의 작업을 독립적인 하위 작업으로 쪼개어 병렬 실행
+    - **Voting**: 동일한 작업을 여러 번 실행하여 다양한 결과를 얻고, 이를 취합해 신뢰도를 높임
+
+- **When to use this workflow**
+    - 하위 작업들이 서로 독립적이어서 병렬 처리로 속도를 높일 수 있을 때 **(의존성 X)**
+    - 단일 판단보다 다각도의 시각이 필요해 높은 신뢰도가 요구될 때
+    - 여러 고려 사항이 있는 복잡한 작업일수록, 각 항목을 별도 LLM 호출로 분리하는 것이 성능에 유리함
+
+- **Examples where parallelization is useful**
+    - **Sectioning**
+        - 가드레일 구현 → 한 LLM은 쿼리 처리, 다른 LLM은 부적절한 요청 필터링 (같은 호출에서 둘 다 처리하는 것보다 성능이 좋음)
+        - LLM 성능 자동 평가(eval) → 각 LLM 호출이 서로 다른 평가 항목을 담당
+    - **Voting**
+        - 코드 취약점 검토 → 여러 프롬프트가 각자 코드를 검토하고, 문제 발견 시 플래그를 올림
+        - 부적절한 콘텐츠 판별 → 여러 프롬프트가 서로 다른 기준으로 평가하고, 오탐(false positive)과 미탐(false negative)의 균형을 맞추기 위해 투표 임계값을 조정
+
+</br>
+
+> [!NOTE]  
+> Sectioning은 **속도**가 목적, Voting은 **정확도와 신뢰도**가 목적.  
+> 같은 "병렬"이지만 해결하려는 문제가 다르므로, 상황에 맞게 선택.
+
+</br>
+
 ### Orchestrator-workers
 ### Evaluator-optimizer
