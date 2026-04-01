@@ -96,6 +96,7 @@ $ uv run pytest tests.py -vv
   </br>
   
   - testing agents
+  - multi-agent architecture
 
 <br>
 

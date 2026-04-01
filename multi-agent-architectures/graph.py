@@ -1,34 +1,41 @@
+from typing import Literal
 from langgraph.graph import StateGraph, START, END
 from langgraph.types import Command
 from langgraph.graph.message import MessagesState
 from langgraph.prebuilt import ToolNode, tools_condition
 from langchain_core.tools import tool
-from langchain_core.messages import SystemMessage
 from langchain.chat_models import init_chat_model
+from pydantic import BaseModel
+
+
+class SupervisorOutput(BaseModel):
+
+    next_agent: Literal["korean_agent", "german_agent", "spanish_agent", "__end__"]
+    reasoning: str
 
 
 class AgentsState(MessagesState):
     current_agent: str
     transfered_by: str
+    reasoning: str
 
 
-llm = init_chat_model("openai:gpt-5-nano")
+# llm = init_chat_model("openai:gpt-5-nano") # 안됨
+llm = init_chat_model("openai:gpt-4o")
 
 
-def make_agent(prompt, tools, language):
+def make_agent(prompt, tools):
 
     def agent_node(state: AgentsState):
         llm_with_tools = llm.bind_tools(tools)
-        system = SystemMessage(
-            content=(
-                f"{prompt}\n\n"
-                "규칙:\n"
-                f"1. 고객의 메시지가 {language}가 아니면, 반드시 handoff_tool을 호출하여 해당 언어의 상담원에게 전달하세요.\n"
-                f"2. {language}가 아닌 메시지에는 절대 직접 응답하지 마세요. 텍스트 응답 없이 handoff_tool만 호출하세요.\n"
-                f"3. {language} 메시지에만 직접 응답하세요."
-            )
+        response = llm_with_tools.invoke(
+            f"""
+            {prompt}
+
+            Conversation History:
+            {state["messages"]}
+            """
         )
-        response = llm_with_tools.invoke([system] + state["messages"])
         return {"messages": [response]}
 
     agent_builder = StateGraph(AgentsState)
@@ -42,77 +49,79 @@ def make_agent(prompt, tools, language):
     agent_builder.add_edge(START, "agent")
     agent_builder.add_conditional_edges("agent", tools_condition)
     agent_builder.add_edge("tools", "agent")
-    # agent_builder.add_edge("agent", END)
+    agent_builder.add_edge("agent", END)
 
     return agent_builder.compile()
 
 
-@tool
-def handoff_tool(transfer_to: str, transfered_by: str):
-    """
-    다른 상담원에게 연결(Handoff)합니다.
-    고객이 현재 상담원의 담당 언어가 아닌 다른 언어로 말할 때 이 도구를 사용하세요.
+graph_builder = StateGraph(AgentsState)
 
-    `transfer_to`에 가능한 값:
-    - `korean_agent` (한국어 상담원)
-    - `german_agent` (독일어 상담원)
-    - `spanish_agent` (스페인어 상담원)
 
-    `transfered_by`에 가능한 값:
-    - `korean_agent`
-    - `german_agent`
-    - `spanish_agent`
+def supervisor(state: AgentsState):
+    structured_llm = llm.with_structured_output(SupervisorOutput)
+    response = structured_llm.invoke(
+        f"""
+        당신은 대화를 적절한 언어 담당 상담원에게 전달(Route)하는 슈퍼바이저(Supervisor)입니다.
 
-    인자(Args):
-        transfer_to: 대화를 전달받을 상담원
-        transfered_by: 대화를 전달한 상담원
-    """
-    if transfer_to == transfered_by:
-        return {
-            "error": "Stop trying to transfer to yourself and answer the question or i will fire you."
-        }
+        고객의 요청 사항과 대화 내역을 분석하여, 다음 중 어떤 상담원이 대화를 처리해야 할지 결정하세요.
+
+        다음에 연결할 수 있는 상담원 옵션:
+        - german_agent (독일어 상담원)
+        - spanish_agent (스페인어 상담원)
+        - korean_agent (한국어 상담원)
+
+        <CONVERSATION_HISTORY>
+        {state.get("messages", [])}
+        </CONVERSATION_HISTORY>
+
+        **IMPORTANT**:
+        - 상담원이 이미 답변을 완료했다면, __end__ 를 반환하여 대화를 종료하세요. 이 경우, 절대 계속해서 대화를 이어가지 마세요.
+        """
+    )
 
     return Command(
-        update={
-            "current_agent": transfer_to,
-            "transfered_by": transfered_by,
-        },
-        goto=transfer_to,
-        graph=Command.PARENT,
+        goto=response.next_agent,
+        update={"reasoning": response.reasoning},
     )
 
 
-graph_builder = StateGraph(AgentsState)
+graph_builder.add_node(
+    "supervisor",
+    supervisor,
+    destinations=(
+        "korean_agent",
+        "spanish_agent",
+        "german_agent",
+        END,
+    ),  # for looks nice
+)
 
 graph_builder.add_node(
     "korean_agent",
     make_agent(
         prompt="당신은 한국어 전담 고객 지원 상담원입니다. 한국어로 된 문의만 처리합니다.",
-        tools=[handoff_tool],
-        language="한국어",
+        tools=[],
     ),
-    destinations=("german_agent", "spanish_agent"),
 )
 graph_builder.add_node(
     "german_agent",
     make_agent(
         prompt="당신은 독일어 전담 고객 지원 상담원입니다. 독일어로 된 문의만 처리합니다.",
-        tools=[handoff_tool],
-        language="독일어",
+        tools=[],
     ),
-    destinations=("korean_agent", "spanish_agent"),
 )
 graph_builder.add_node(
     "spanish_agent",
     make_agent(
         prompt="당신은 스페인어 전담 고객 지원 상담원입니다. 스페인어로 된 문의만 처리합니다.",
-        tools=[handoff_tool],
-        language="스페인어",
+        tools=[],
     ),
-    destinations=("german_agent", "korean_agent"),
 )
 
-graph_builder.add_edge(START, "korean_agent")
+graph_builder.add_edge(START, "supervisor")
+graph_builder.add_edge("korean_agent", "supervisor")
+graph_builder.add_edge("german_agent", "supervisor")
+graph_builder.add_edge("spanish_agent", "supervisor")
 
 graph = graph_builder.compile()
 
